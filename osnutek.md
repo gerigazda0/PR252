@@ -12,3 +12,4 @@ Na katerem območju Slovenije se zgodi največ nesreč?
 V katerem letnem času je največ nesreč?
 
 Člani skupine: Nik Likar, Eva Simonič, Tomaž Aleksander Udovič in to je ubistvu to od unih k bojo dejansko delal, mogoce ksna pijauka se sm pa ke....
+dfhadjjrtjkerjk
