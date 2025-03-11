@@ -11,4 +11,4 @@ Kateri so najpogostejši vzroki za prometne nesreče?
 Na katerem območju Slovenije se zgodi največ nesreč?
 
 
-Člani skupine: Nejc Gerkšič, Nik Likar, Eva Simonič, Jan Slanc in Tomaž Aleksander Udovič
+Člani skupine: Nik Likar, Eva Simonič, Jan Slanc, Tomaž Aleksander Udovič in  last but not least Nejc Gerkšič
