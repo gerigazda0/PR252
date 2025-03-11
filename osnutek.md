@@ -1,1 +1,14 @@
-# PR252
+# Osnutek projekta
+
+Na kratko opišite problem ter navedite pomembnejše cilje oz. vprašanja, na katera boste skušali odgovoriti tekom analize podatkov. Za projekt zapišite okvirni informativni naslov, ki povzame bistvo projekta. V naslovu ne pišite, da gre za projekt pri predmetu PR, ker to že vem(o). Lahko pa to pojasnilo zapišete v podnaslovu.
+
+Okvirni naslov projekta: Analiza prometnih nesreč v Sloveniji
+
+Za izdelavo projektne naloge smo si izbrali podatke s spletne strani OPSI (https://podatki.gov.si/dataset/mnzpprometne-nesrece-od-leta-2009-dalje#). Podatki vsebujejo informacije o prometnih nesrečah v Sloveniji od leta 2009 do leta 2024.
+
+Raziskovalna vprašanja:
+Kateri so najpogostejši vzroki za prometne nesreče?
+Na katerem območju Slovenije se zgodi največ nesreč?
+
+
+Člani skupine: Nejc Gerkšič, Nik Likar, Eva Simonič, Jan Slanc in Tomaž Aleksander Udovič
