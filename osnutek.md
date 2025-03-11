@@ -1,6 +1,6 @@
 # Analiza prometnih nesreč v Sloveniji
 
-Za izdelavo projektne naloge smo si izbrali podatke s spletne strani OPSI (https://podatki.gov.si/dataset/mnzpprometne-nesrece-od-leta-2009-dalje#). Podatki vsebujejo informacije o prometnih nesrečah v Sloveniji od leta 2009 do leta 2023. S pomočjo podatkov bomo analizirali različne dejavnike, ki vplivajo na pojavnost nesreč, in skušali prepoznati ključne vzroke ter značilnosti udeležencev.
+Za izdelavo projektne naloge smo si izbrali podatke s spletne strani OPSI (https://podatki.gov.si/dataset/mnzpprometne-nesrece-od-leta-2009-dalje#), kjer so dostopni v formatu CSV-datotek, razdeljeni po letih. Podatki vsebujejo informacije o prometnih nesrečah v Sloveniji od leta 2009 do leta 2023. Na podlagi teh podatkov bomo analizirali različne dejavnike, ki vplivajo na pojavnost nesreč, ter skušali prepoznati ključne vzroke in značilnosti udeležencev.
 
 Raziskovalna vprašanja:
 - Kateri so najpogostejši vzroki za prometne nesreče?
