@@ -2,7 +2,7 @@
 
 **Datum:** 14. april 2025
 
-**Avtor:** 
+**Avtorji:** Nejc Gerkšič, Nik Likar, Eva Simonič, Jan Slanc in Tomaž Aleksander Udovič
 
 **Projekt:** Analiza prometnih nesreč v Sloveniji
 
@@ -13,7 +13,6 @@ Namen te projektne naloge je analizirati podatke o prometnih nesrečah v Sloveni
 ## 2. Podatki
 
 Podatke za našo analizo smo pridobili s spletne strani OPSI (https://podatki.gov.si/dataset/mnzpprometne-nesrece-od-leta-2009-dalje). Zajemajo informacije o vseh prometnih nesrečah v Sloveniji od leta 2009 do 2023 in so dostopni v formatu CSV datotek, ločenih po letih. Vsaka datoteka vsebuje podrobne informacije o posamezni nesreči, vključno z datumom, uro, lokacijo, vzrokom, udeleženci in posledicami. Stolpci, ki so ključni za našo dosedanjo analizo, vključujejo: `VzrokNesrece`, `Starost`, `Spol`, `UpravnaEnotaStoritve`, `VrednostAlkotesta`, `DatumPN`, `PoskodbaUdelezenca` in `UporabaVarnostnegaPasu`.
-
 Za potrebe analize smo posamezne letne datoteke prenesli in jih s pomočjo knjižnice `pandas` v programskem jeziku Python združili v enoten DataFrame. Ta korak je omogočil lažjo in učinkovitejšo analizo celotnega časovnega obdobja.
 
 ## 3. Izvedene Analize in Glavne Ugotovitve
