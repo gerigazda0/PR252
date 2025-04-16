@@ -6,7 +6,7 @@
 
 **Projekt:** Analiza prometnih nesreč v Sloveniji
 
-## 1. Uvod in opis Problema
+## 1. Uvod in opis problema
 
 Namen te projektne naloge je analizirati podatke o prometnih nesrečah v Sloveniji v obdobju od leta 2009 do vključno leta 2023. Razumevanje vzrokov, značilnosti in geografske porazdelitve prometnih nesreč je lahko ključnega pomena za izboljšanje prometne varnosti. S pomočjo analize obsežnega nabora podatkov želimo odgovoriti na zastavljena raziskovalna vprašanja, ki se osredotočajo na najpogostejše vzroke nesreč, vlogo mladih voznikov, regionalne razlike, vpliv alkohola, sezonske trende in uporabo varnostnih pasov.
 
@@ -14,7 +14,7 @@ Namen te projektne naloge je analizirati podatke o prometnih nesrečah v Sloveni
 
 Podatke za našo analizo smo pridobili s spletne strani OPSI (https://podatki.gov.si/dataset/mnzpprometne-nesrece-od-leta-2009-dalje). Zajemajo informacije o vseh prometnih nesrečah v Sloveniji od leta 2009 do 2023 in so dostopni v formatu CSV datotek, ločenih po letih. Vsaka datoteka vsebuje podrobne informacije o posamezni nesreči, vključno z datumom, uro, lokacijo, vzrokom, udeleženci in posledicami. Stolpci, ki so ključni za našo dosedanjo analizo, vključujejo: `VzrokNesrece`, `Starost`, `Spol`, `UpravnaEnotaStoritve`, `VrednostAlkotesta`, `DatumPN`, `PoskodbaUdelezenca`, `UporabaVarnostnegaPasu`, `GeoKoordinataX`, `GeoKoordinataY`. Za potrebe analize smo posamezne letne datoteke prenesli in jih s pomočjo knjižnice `pandas` v programskem jeziku Python združili v enoten DataFrame. Ta korak je omogočil lažjo in učinkovitejšo analizo celotnega časovnega obdobja.
 
-## 3. Izvedene Analize in Glavne Ugotovitve
+## 3. Izvedene analize in glavne ugotovitve
 
 V dosedanji iteraciji smo izvedli nekaj temeljnih analiz, da bi dobili vpogled v podatke in odgovorili na del naših raziskovalnih vprašanj.
 
@@ -41,7 +41,7 @@ Zanimalo nas je tudi, na katerih območjih Slovenije se zgodi največ nesreč. T
 
 ![image](https://github.com/user-attachments/assets/b8350e94-7b1a-41eb-b809-1077c593ff92)
 
-## 4. Nadaljnje Analize in Načrti
+## 4. Nadaljnje analize in načrti
 
 V nadaljevanju našega dela se bomo osredotočili na odgovore na preostala raziskovalna vprašanja. Načrtujemo naslednje analize:
 
@@ -54,7 +54,7 @@ V nadaljevanju našega dela se bomo osredotočili na odgovore na preostala razis
 
 Naša dosedanja analiza je omogočila prve vpoglede v najpogostejše vzroke prometnih nesreč, geografsko porazdelitev nesreč ter vlogo mladih voznikov kot povzročiteljev. Glavne ugotovitve doslej kažejo na pomembnost dejavnikov, kot so neprilagojena hitrost, neupoštevanje pravil o prednosti, ter vožnja pod vplivom alkohola, ki predstavljajo največji delež med povzročitelji nesreč. Opazili smo tudi določene razlike med mlajšimi vozniki (18–24 let) in ostalimi vozniki, tako glede njihovega deleža med povzročitelji kot tudi pri povprečni izmerjeni vrednosti alkohola. Na podlagi teh začetnih vpogledov bomo v nadaljevanju poglobili naše raziskovanje z namenom, da bi celoviteje odgovorili na zastavljena raziskovalna vprašanja in s tem prispevali k boljšemu razumevanju prometne varnosti v Sloveniji.
 
-## 6. Viri Kode
+## 6. Viri kode
 
 Za analizo podatkov smo uporabili programski jezik Python in naslednje knjižnice:
 
