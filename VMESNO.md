@@ -52,8 +52,7 @@ V nadaljevanju našega dela se bomo osredotočili na odgovore na preostala razis
 
 ## 5. Zaključek
 
-Naša dosedanja analiza je omogočila prve vpoglede v najpogostejše vzroke prometnih nesreč ter značilnosti povzročiteljev glede na starost in spol. Glavne ugotovitve kažejo na pomembnost dejavnikov, kot so [], ter na razlike med mladimi in ostalimi vozniki ter med spoloma pri povzročanju nesreč. V prihodnjih korakih bomo poglobili analizo z namenom, da bi celoviteje odgovorili na zastavljena raziskovalna vprašanja in prispevali k boljšemu razumevanju prometne varnosti v Sloveniji.
-
+Naša dosedanja analiza je omogočila prve vpoglede v najpogostejše vzroke prometnih nesreč, geografsko porazdelitev nesreč ter vlogo mladih voznikov kot povzročiteljev. Glavne ugotovitve doslej kažejo na pomembnost dejavnikov, kot so neprilagojena hitrost, neupoštevanje pravil o prednosti, ter vožnja pod vplivom alkohola, ki predstavljajo največji delež med povzročitelji nesreč. Opazili smo tudi določene razlike med mlajšimi vozniki (18–24 let) in ostalimi vozniki, tako glede njihovega deleža med povzročitelji kot tudi pri povprečni izmerjeni vrednosti alkohola. Na podlagi teh začetnih vpogledov bomo v nadaljevanju poglobili naše raziskovanje z namenom, da bi celoviteje odgovorili na zastavljena raziskovalna vprašanja in s tem prispevali k boljšemu razumevanju prometne varnosti v Sloveniji.
 
 ## 6. Viri Kode
 
@@ -61,4 +60,5 @@ Za analizo podatkov smo uporabili programski jezik Python in naslednje knjižnic
 
 * `pandas` (za obdelavo in analizo podatkov)
 * `matplotlib.pyplot` (za osnovno vizualizacijo podatkov)
-* `seaborn` (za naprednejšo statistično vizualizacijo)
+* `geopandas` (delo z geografskimi podatki)
+* `folium` (knjižnica za ustvarjanje interaktivnih zemljevidov na osnovi OpenStreetMap)
