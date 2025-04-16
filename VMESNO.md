@@ -1,4 +1,4 @@
-# VMESNO POROČILO: Analiza prometnih nesreč v Sloveniji (2009-2023)
+# VMESNO POROČILO: Prometne nesreče v Sloveniji med leti 2009 in 2023
 
 **Datum:** 14. april 2025
 
