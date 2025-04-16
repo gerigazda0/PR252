@@ -37,15 +37,15 @@ Da bi preučili vlogo mladih voznikov kot povzročiteljev nesreč, smo ustvarili
 
 ### 3.3. Geografska porazdeljenost prometnih nesreč
 
-Zanimalo nas je tudi, na katerih območjih Slovenije se zgodi največ nesreč. 
+Zanimalo nas je tudi, na katerih območjih Slovenije se zgodi največ nesreč. Takšna analiza nam omogoča, da prepoznamo kritične točke v prometni infrastrukturi, kjer bi bilo morda smiselno uvesti dodatne varnostne ukrepe, izboljšati prometno signalizacijo ali prilagoditi cestno ureditev. Za ta namen smo uporabili koordinatne podatke, zapisane v CSV datoteki, in jih prikazali na zemljevidu Slovenije s pomočjo interaktivne toplotne karte. Na tej karti so območja z večjo koncentracijo nesreč prikazana z intenzivnejšimi barvami.
 
-Slika3
+![image](https://github.com/user-attachments/assets/b8350e94-7b1a-41eb-b809-1077c593ff92)
 
 ## 4. Nadaljnje Analize in Načrti
 
 V nadaljevanju našega dela se bomo osredotočili na odgovore na preostala raziskovalna vprašanja. Načrtujemo naslednje analize:
 
-* **Regionalna analiza:** Preučili bomo, ali obstajajo območja v Sloveniji, kjer se zgodi statistično značilno več prometnih nesreč, z uporabo stolpca `UpravnaEnotaStoritve` in potencialno `Lokacija` ali koordinat, če bo potrebno natančnejše kartiranje.
+* **Primerjava po spolu:** Preučili bomo, ali je večji delež povzročiteljev moškega ali ženskega spola.
 * **Vpliv alkohola:** Analizirali bomo delež povzročiteljev nesreč, ki so bili pod vplivom alkohola, na podlagi stolpca `VrednostAlkotesta`.
 * **Sezonski trendi:** Raziskali bomo, ali obstaja povezava med letnim časom (izpeljanim iz stolpca `DatumPN`) in številom prometnih nesreč.
 * **Uporaba varnostnega pasu in posledice:** Analizirali bomo, kolikšen delež udeležencev s hudimi poškodbami ni uporabljal varnostnega pasu, s primerjavo stolpcev `PoskodbaUdelezenca` in `UporabaVarnostnegaPasu`.
