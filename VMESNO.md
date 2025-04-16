@@ -6,14 +6,13 @@
 
 **Projekt:** Analiza prometnih nesreč v Sloveniji
 
-## 1. Uvod in Opis Problema
+## 1. Uvod in opis Problema
 
 Namen te projektne naloge je analizirati podatke o prometnih nesrečah v Sloveniji v obdobju od leta 2009 do vključno leta 2023. Razumevanje vzrokov, značilnosti in geografske porazdelitve prometnih nesreč je lahko ključnega pomena za izboljšanje prometne varnosti. S pomočjo analize obsežnega nabora podatkov želimo odgovoriti na zastavljena raziskovalna vprašanja, ki se osredotočajo na najpogostejše vzroke nesreč, vlogo mladih voznikov, regionalne razlike, vpliv alkohola, sezonske trende in uporabo varnostnih pasov.
 
 ## 2. Podatki
 
-Podatke za našo analizo smo pridobili s spletne strani OPSI (https://podatki.gov.si/dataset/mnzpprometne-nesrece-od-leta-2009-dalje). Zajemajo informacije o vseh prometnih nesrečah v Sloveniji od leta 2009 do 2023 in so dostopni v formatu CSV datotek, ločenih po letih. Vsaka datoteka vsebuje podrobne informacije o posamezni nesreči, vključno z datumom, uro, lokacijo, vzrokom, udeleženci in posledicami. Stolpci, ki so ključni za našo dosedanjo analizo, vključujejo: `VzrokNesrece`, `Starost`, `Spol`, `UpravnaEnotaStoritve`, `VrednostAlkotesta`, `DatumPN`, `PoskodbaUdelezenca` in `UporabaVarnostnegaPasu`.
-Za potrebe analize smo posamezne letne datoteke prenesli in jih s pomočjo knjižnice `pandas` v programskem jeziku Python združili v enoten DataFrame. Ta korak je omogočil lažjo in učinkovitejšo analizo celotnega časovnega obdobja.
+Podatke za našo analizo smo pridobili s spletne strani OPSI (https://podatki.gov.si/dataset/mnzpprometne-nesrece-od-leta-2009-dalje). Zajemajo informacije o vseh prometnih nesrečah v Sloveniji od leta 2009 do 2023 in so dostopni v formatu CSV datotek, ločenih po letih. Vsaka datoteka vsebuje podrobne informacije o posamezni nesreči, vključno z datumom, uro, lokacijo, vzrokom, udeleženci in posledicami. Stolpci, ki so ključni za našo dosedanjo analizo, vključujejo: `VzrokNesrece`, `Starost`, `Spol`, `UpravnaEnotaStoritve`, `VrednostAlkotesta`, `DatumPN`, `PoskodbaUdelezenca`, `UporabaVarnostnegaPasu`, `GeoKoordinataX`, `GeoKoordinataY`. Za potrebe analize smo posamezne letne datoteke prenesli in jih s pomočjo knjižnice `pandas` v programskem jeziku Python združili v enoten DataFrame. Ta korak je omogočil lažjo in učinkovitejšo analizo celotnega časovnega obdobja.
 
 ## 3. Izvedene Analize in Glavne Ugotovitve
 
@@ -23,18 +22,22 @@ V dosedanji iteraciji smo izvedli nekaj temeljnih analiz, da bi dobili vpogled v
 
 Z analizo stolpca `VzrokNesrece` smo identificirali deset najpogostejših vzrokov prometnih nesreč v analiziranem obdobju.
 
-Slika1
+![image](https://github.com/user-attachments/assets/65acbc71-301a-4131-b425-a6b902f33422)
+
+Naredili smo tudi trende glavnih vzrokov prometnih nesreč po letih.
+
+![image](https://github.com/user-attachments/assets/92ee68a9-b999-4b21-805c-ef047870f664)
 
 ### 3.2. Delež mladih voznikov med povzročitelji nesreč
 
-Da bi preučili vlogo mladih voznikov kot povzročiteljev nesreč, smo ustvarili novo kategorijo 'MladiVoznik' za udeležence starosti med 16 in 24 let. Nato smo analizirali delež teh voznikov med vsemi, ki so bili označeni kot povzročitelji nesreče.
+Da bi preučili vlogo mladih voznikov kot povzročiteljev nesreč, smo ustvarili novo kategorijo 'MladiVoznik' za udeležence starosti med 18 in 24 let. Nato smo analizirali delež teh voznikov med vsemi, ki so bili označeni kot povzročitelji nesreče. Prav tako smo primerjali povprečno vrednost alkotesta po starostnih skupinah.
 
-Slika2
+![image](https://github.com/user-attachments/assets/b1165874-0334-450e-83ec-d8213dfeff37)
 
 
-### 3.3. Spolna struktura povzročiteljev prometnih nesreč
+### 3.3. Geografska porazdeljenost prometnih nesreč
 
-Prav tako nas je zanimala spolna struktura povzročiteljev nesreč. Analizirali smo spol udeležencev.
+Zanimalo nas je tudi, na katerih območjih Slovenije se zgodi največ nesreč. 
 
 Slika3
 
