@@ -48,7 +48,7 @@ Da bi preučili vlogo mladih voznikov kot povzročiteljev nesreč, smo ustvarili
 
 ### 3.3. Geografska porazdeljenost prometnih nesreč
 
-Zanimalo nas je tudi, na katerih območjih Slovenije se zgodi največ nesreč. Takšna analiza nam omogoča, da prepoznamo kritične točke v prometni infrastrukturi, kjer bi bilo morda smiselno uvesti dodatne varnostne ukrepe, izboljšati prometno signalizacijo ali prilagoditi cestno ureditev. Za ta namen smo uporabili koordinatne podatke, zapisane v CSV datoteki, in jih prikazali na zemljevidu Slovenije s pomočjo interaktivne toplotne karte. Na tej karti so območja z večjo koncentracijo nesreč prikazana z intenzivnejšimi barvami.
+Na podlagi prostorske analize prometnih nesreč z uporabo “heatmap” vizualizacije ugotavljamo, da so prometne nesreče v Sloveniji izrazito skoncentrirane na območjih večjih urbanih središč, predvsem v Ljubljani in njeni okolici, kjer je gostota nesreč najvišja. Povečana gostota je opazna tudi v okolici Maribora ter vzdolž glavnih cest in avtocest, ki povezujejo večja mesta. V primerjavi s tem so prometne nesreče precej redkejše na podeželju in obmejnih območjih, kjer je prometna obremenitev manjša.
 
 ![image](https://github.com/user-attachments/assets/b8350e94-7b1a-41eb-b809-1077c593ff92)
 
