@@ -26,7 +26,9 @@ page = st.sidebar.radio("Izberi sklop:", [
     "📍 Toplotna karta",
     "🚧 Nevarni odseki",
     "⚠️ Vzroki nesreč",
-    "👶 Mladi povzročitelji"
+    "👶 Mladi povzročitelji",
+    "🍷 Alkohol",
+    "🛡️Varnostni pas"
 ])
 
 if data is not None:
@@ -129,5 +131,153 @@ if data is not None:
 
         st.markdown(f"**Povprečna starost mladih povzročiteljev:** {mladi['Starost'].mean():.1f} let")
         st.markdown(f"**Delež med vsemi povzročitelji:** {len(mladi)/len(povzrocitelji)*100:.1f}%")
+        
+
+    elif page == "🍷 Alkohol":
+        st.title("🍷 Analize povezanosti alkohola in povzročiteljev")
+        izbor = st.radio(
+            "Izberi prikaz:",
+            (
+                "Delež povzročiteljev po vrednosti alkotesta",
+                "Delež hudo poškodovanih glede na alkoholiziranost povzročitelja"
+            ),
+            horizontal=True
+        )
+
+        def parse_alko(val):
+            try:
+                return float(str(val).replace(",", ".").replace(" ", ""))
+            except:
+                return 0.0
+
+        df = data.copy()  # če rabiš večkrat
+        df['VrednostAlkotesta_float'] = df['VrednostAlkotesta'].apply(parse_alko)
+
+        if izbor == "Delež povzročiteljev po vrednosti alkotesta":
+            povzrocitelji = df[df['Povzrocitelj'] == 'POVZROČITELJ'].copy()
+
+            negativni = (povzrocitelji['VrednostAlkotesta_float'] == 0).sum()
+            pozitivni_pod_mejo = ((povzrocitelji['VrednostAlkotesta_float'] > 0) & (povzrocitelji['VrednostAlkotesta_float'] <= 0.5)).sum()
+            nad_mejo = (povzrocitelji['VrednostAlkotesta_float'] > 0.5).sum()
+
+            labels = ['Negativni (≤ 0)', 'Pozitivni (0–0.5 g/kg)', 'Nad mejo (> 0.5 g/kg)']
+            values = [negativni, pozitivni_pod_mejo, nad_mejo]
+            total = sum(values)
+            percentages = [v / total * 100 for v in values]
+
+            import matplotlib.pyplot as plt
+            fig, ax = plt.subplots(figsize=(8, 5))
+            bars = ax.bar(labels, percentages, color=['#4e79a7', '#f28e2b', '#e15759'])
+            ax.set_title('Delež povzročiteljev po vrednosti alkotesta (%)', fontsize=15, fontweight='bold')
+            ax.set_ylabel('Delež (%)', fontsize=13)
+            ax.set_xlabel('Skupina', fontsize=13)
+            ax.set_ylim(0, 100)
+            ax.bar_label(bars, fmt='%.1f %%', fontsize=13, fontweight='bold')
+            ax.tick_params(axis='both', labelsize=12)
+            plt.tight_layout()
+            st.pyplot(fig)
+
+        elif izbor == "Delež hudo poškodovanih glede na alkoholiziranost povzročitelja":
+            # 1. ID-ji nesreč, kjer je povzročitelj imel alkohol > 0
+            nesrece_pijanec = df[(df['Povzrocitelj'] == 'POVZROČITELJ') & (df['VrednostAlkotesta_float'] > 0)]['ZaporednaStevilkaPN'].unique()
+            # 2. Udeleženci s hudo poškodbo v teh nesrečah
+            hudo_v_pijani = df[(df['ZaporednaStevilkaPN'].isin(nesrece_pijanec)) & (df['PoskodbaUdelezenca'] == 'HUDA TELESNA POŠKODBA')]
+            # 3. Vsi udeleženci s hudo poškodbo (ne glede na alkohol)
+            vsi_hudo = df[df['PoskodbaUdelezenca'] == 'HUDA TELESNA POŠKODBA']
+            # 4. Hudo poškodovani v nesrečah brez alkoholiziranega povzročitelja
+            hudo_v_trezni = len(vsi_hudo) - len(hudo_v_pijani)
+
+            labels = ['Povzročil alkoholiziran voznik', 'Povzročil trezen voznik']
+            values = [len(hudo_v_pijani), hudo_v_trezni]
+            percentages = [v / len(vsi_hudo) * 100 for v in values]
+
+            import matplotlib.pyplot as plt
+            fig, ax = plt.subplots(figsize=(7, 5))
+            bars = ax.bar(labels, percentages, color=['#e15759', '#4e79a7'])
+            ax.set_ylabel('Delež (%)', fontsize=13)
+            ax.set_title('Delež hudo poškodovanih udeležencev\n glede na alkoholiziranost povzročitelja', fontsize=15, fontweight='bold')
+            ax.set_ylim(0, 100)
+            ax.bar_label(bars, fmt='%.1f %%', fontsize=13, fontweight='bold')
+            ax.tick_params(axis='both', labelsize=12)
+            plt.tight_layout()
+            st.pyplot(fig)
+
+
+    elif page == "🛡️Varnostni pas":
+        st.title("🛡️ Analize uporabe varnostnega pasu")
+        izbor = st.radio(
+            "Izberi prikaz:",
+            (
+                "Delež uporabe pasu po vrsti poškodbe (%)",
+                "Število poškodb glede na uporabo pasu"
+            ),
+            horizontal=True
+        )
+
+        import numpy as np
+
+        df_pas = data[data['UporabaVarnostnegaPasu'].isin(['DA', 'NE'])].copy()
+        
+        # Pripravimo pivot za oba grafa (da ni podvajanja kode)
+        pivot = pd.pivot_table(
+            df_pas,
+            index='PoskodbaUdelezenca',
+            columns='UporabaVarnostnegaPasu',
+            aggfunc='size',
+            fill_value=0
+        )
+
+        # Po želji odstrani nespremembe/odstop:
+        pivot = pivot.drop(['BREZ POŠKODBE', 'BREZ POŠKODBE-UZ', 'ODSTOP OD OGLEDA PN'], errors='ignore')
+
+        if izbor == "Delež uporabe pasu po vrsti poškodbe (%)":
+            percent_pivot = pivot.div(pivot.sum(axis=1), axis=0) * 100
+            percent_pivot = percent_pivot.loc[percent_pivot['NE'].sort_values(ascending=False).index]
+            fig, ax = plt.subplots(figsize=(10, 6))
+            percent_pivot[['DA', 'NE']].plot(
+                kind='bar',
+                stacked=True,
+                color={'DA': '#4e79a7', 'NE': '#e15759'},
+                ax=ax
+            )
+            ax.set_title('Delež uporabe varnostnega pasu glede na vrsto poškodbe (%)', fontsize=15, fontweight='bold')
+            ax.set_xlabel('Vrsta poškodbe', fontsize=13)
+            ax.set_ylabel('Delež udeležencev (%)', fontsize=13)
+            # Premakni legendo NAD graf
+            ax.legend(
+                title='Uporaba varnostnega pasu',
+                loc='lower center',
+                bbox_to_anchor=(0.5, 1.2),
+                ncol=2,
+                fontsize=12,
+                title_fontsize=12
+            )
+            ax.tick_params(axis='both', labelsize=12)
+            plt.tight_layout()
+            st.pyplot(fig)
+
+
+        elif izbor == "Število poškodb glede na uporabo pasu":
+            # Sortiraj po skupnem številu (najprej manj pogoste poškodbe)
+            pivot_sorted = pivot.loc[pivot.sum(axis=1).sort_values().index]
+            y = np.arange(len(pivot_sorted.index))
+            bar_width = 0.4
+            fig, ax = plt.subplots(figsize=(10, 6))
+            ax.barh(y - bar_width/2, pivot_sorted['DA'], height=bar_width, label='Z varnostnim pasom', color='#4e79a7')
+            ax.barh(y + bar_width/2, pivot_sorted['NE'], height=bar_width, label='Brez varnostnega pasu', color='#e15759')
+            ax.set_yticks(y)
+            ax.set_yticklabels(pivot_sorted.index)
+            ax.set_xlabel('Število udeležencev', fontsize=13)
+            ax.set_ylabel('Vrsta poškodbe', fontsize=13)
+            ax.set_title('Poškodbe udeležencev glede na uporabo varnostnega pasu', fontsize=15, fontweight='bold')
+            ax.legend()
+            ax.tick_params(axis='both', labelsize=12)
+            plt.tight_layout()
+            st.pyplot(fig)
+
+
 else:
     st.warning("Podatki niso na voljo.")
+
+#streamlit run streamlitapp.py
+
