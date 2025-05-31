@@ -1,6 +1,6 @@
-# VMESNO POROČILO: Prometne nesreče v Sloveniji med leti 2009 in 2023
+# KONČNO POROČILO: Prometne nesreče v Sloveniji med leti 2009 in 2023
 
-**Datum:** 14. april 2025
+**Datum:** 1. junij 2025
 
 **Avtorji:** Nejc Gerkšič, Nik Likar, Eva Simonič, Jan Slanc in Tomaž Aleksander Udovič
 
@@ -8,28 +8,24 @@
 
 ## 1. Uvod in opis problema
 
-Prometne nesreče predstavljajo pomembno grožnjo za javno zdravje in varnost. Namen tega projekta je analizirati podatke o prometnih nesrečah v Sloveniji med letoma 2009 in 2023, da bi razumeli ključne vzroke, trende in dejavnike, ki vplivajo na njihovo pojavnost. Glavni cilj je identificirati kritična območja in dejavnike tveganja, kar lahko prispeva k izboljšanju prometne varnosti.
+Prometne nesreče predstavljajo resno tveganje za javno zdravje in varnost v Sloveniji. Osrednji namen tega projekta je bil celovito analizirati podatke o prometnih nesrečah, zbranih med letoma 2009 in 2023, z namenom boljšega razumevanja ključnih vzrokov, trendov in dejavnikov, ki vplivajo na njihovo pogostost in resnost. Poseben poudarek smo namenili prepoznavanju kritičnih območij in dejavnikov tveganja, kar lahko pomembno prispeva k oblikovanju učinkovitih ukrepov za izboljšanje prometne varnosti v prihodnje.
 
 **Glavna raziskovalna vprašanja:**
-- Kateri so najpogostejši vzroki nesreč?
-- Ali mladi vozniki (18–24 let) pogosteje povzročajo nesreče?
-- Kje se zgodi največ nesreč? (geografska analiza)
-- Kakšen je vpliv alkohola na prometne nesreče?
-- Ali obstajajo sezonski trendi?
-- Kako uporaba varnostnih pasov vpliva na resnost posledic?
+- Kateri so najpogostejši vzroki za prometne nesreče?
+- Ali mladi vozniki pogosteje povzročajo nesreče?
+- Na katerem območju Slovenije se zgodi največ nesreč?
+- Kolikšen delež vseh povzročiteljev nesreč je bilo pod vplivom alkohola?
+- V katerem letnem času je največ nesreč?
+- Koliko odstotkov udeležencev s hudimi poškodbami ni uporabljalo varnostnega pasu?
+- Ali je več povzročiteljev nesreč moškega ali ženskega spola?
 
 ## 2. Podatki in metodologija
 
-### 2.1 Vir podatkov
-Podatki pridobljeni iz [OPSI](https://podatki.gov.si), ki vključujejo:
-- 15 let prometnih nesreč (2009-2023)
-- 50+ spremenljivk na nesrečo
-- Geografske koordinate
+### 2.1 Podatki
+Podatke za našo analizo smo pridobili s spletne strani OPSI (https://podatki.gov.si/dataset/mnzpprometne-nesrece-od-leta-2009-dalje). Zajemajo informacije o vseh prometnih nesrečah v Sloveniji od leta 2009 do 2023 in so dostopni v formatu CSV datotek, ločenih po letih. Vsaka datoteka vsebuje podrobne informacije o posamezni nesreči, vključno z datumom, uro, lokacijo, vzrokom, udeleženci in posledicami.Stolpci, ki so bili ključni za našo analizo, vključujejo: VzrokNesrece, Starost, Spol, UpravnaEnotaStoritve, VrednostAlkotesta, DatumPN, PoskodbaUdelezenca, UporabaVarnostnegaPasu, GeoKoordinataX, GeoKoordinataY, Povzrocitelj, VrstaUdelezenca, ZaporednaStevilkaOsebeVPN ter KlasifikacijaNesrece. Ti podatki so nam omogočili podrobno analizo vzrokov, okoliščin in posledic prometnih nesreč, kot tudi identifikacijo vzorcev tveganega vedenja med udeleženci. Za potrebe analize smo posamezne letne datoteke prenesli in jih s pomočjo knjižnice `pandas` v programskem jeziku Python združili v enoten DataFrame. Ta korak je omogočil lažjo in učinkovitejšo analizo celotnega časovnega obdobja.
 
-### 2.2 Metode
-- Združevanje podatkov (pandas)
-- Vizualizacija (matplotlib, folium)
-- Statistična analiza
+### 2.2 Metodologija
+Pri obdelavi in analizi podatkov smo uporabili orodja in knjižnice programskega jezika Python. Za manipulacijo, čiščenje in združevanje podatkov smo uporabili knjižnico pandas, za izvajanje matematičnih in statističnih operacij pa numpy. Prostorske oziroma geografske analize in vizualizacije smo izvajali s pomočjo knjižnic geopandas in folium, ki omogočata prikaz in obdelavo prostorskih podatkov ter interaktivno vizualizacijo lokacij prometnih nesreč na zemljevidih. Za pripravo različnih vrst grafov smo uporabili knjižnico matplotlib.
 
 ## 3. Glavne ugotovitve
 
@@ -55,3 +51,7 @@ Da bi preučili vlogo mladih voznikov kot povzročiteljev nesreč, smo ustvarili
 Zanimalo nas je tudi, na katerih območjih Slovenije se zgodi največ nesreč. Takšna analiza nam omogoča, da prepoznamo kritične točke v prometni infrastrukturi, kjer bi bilo morda smiselno uvesti dodatne varnostne ukrepe, izboljšati prometno signalizacijo ali prilagoditi cestno ureditev. Za ta namen smo uporabili koordinatne podatke, zapisane v CSV datoteki, in jih prikazali na zemljevidu Slovenije s pomočjo interaktivne toplotne karte. Na tej karti so območja z večjo koncentracijo nesreč prikazana z intenzivnejšimi barvami.
 
 ![image](https://github.com/user-attachments/assets/b8350e94-7b1a-41eb-b809-1077c593ff92)
+
+### 3.4. Vpliv alkohola na nesreče
+
+### 3.5. 
