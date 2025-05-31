@@ -87,7 +87,6 @@ if data is not None:
     elif page == "⚠️ Vzroki nesreč":
         st.title("⚠️ Najpogostejši vzroki prometnih nesreč")
 
-        # Filter po tipu nesreče
         tipi = sorted(data['TipNesrece'].dropna().unique())
         izbrani_tip = st.selectbox("Filtriraj po tipu nesreče", options=["Vse"] + tipi)
         filtered_vzroki = data if izbrani_tip == "Vse" else data[data['TipNesrece'] == izbrani_tip]
@@ -103,7 +102,6 @@ if data is not None:
     elif page == "👶 Mladi povzročitelji":
         st.title("👶 Analiza mladih povzročiteljev (18–24 let)")
 
-        # Filter po spolu
         spoli = sorted(data['Spol'].dropna().unique())
         izbrani_spol = st.radio("Izberi spol", options=["Vsi"] + spoli, horizontal=True)
 
@@ -170,7 +168,6 @@ if data is not None:
             total = sum(values)
             percentages = [v / total * 100 for v in values]
 
-            import matplotlib.pyplot as plt
             fig, ax = plt.subplots(figsize=(8, 5))
             bars = ax.bar(labels, percentages, color=['#4e79a7', '#f28e2b', '#e15759'])
             ax.set_title('Delež povzročiteljev po vrednosti alkotesta (%)', fontsize=15, fontweight='bold')
@@ -185,10 +182,13 @@ if data is not None:
         elif izbor == "Delež hudo poškodovanih glede na alkoholiziranost povzročitelja":
             # 1. ID-ji nesreč, kjer je povzročitelj imel alkohol > 0
             nesrece_pijanec = df[(df['Povzrocitelj'] == 'POVZROČITELJ') & (df['VrednostAlkotesta_float'] > 0)]['ZaporednaStevilkaPN'].unique()
+
             # 2. Udeleženci s hudo poškodbo v teh nesrečah
             hudo_v_pijani = df[(df['ZaporednaStevilkaPN'].isin(nesrece_pijanec)) & (df['PoskodbaUdelezenca'] == 'HUDA TELESNA POŠKODBA')]
+
             # 3. Vsi udeleženci s hudo poškodbo (ne glede na alkohol)
             vsi_hudo = df[df['PoskodbaUdelezenca'] == 'HUDA TELESNA POŠKODBA']
+
             # 4. Hudo poškodovani v nesrečah brez alkoholiziranega povzročitelja
             hudo_v_trezni = len(vsi_hudo) - len(hudo_v_pijani)
 
@@ -221,7 +221,6 @@ if data is not None:
 
         df_pas = data[data['UporabaVarnostnegaPasu'].isin(['DA', 'NE'])].copy()
         
-        # Pripravimo pivot za oba grafa (da ni podvajanja kode)
         pivot = pd.pivot_table(
             df_pas,
             index='PoskodbaUdelezenca',
@@ -230,7 +229,6 @@ if data is not None:
             fill_value=0
         )
 
-        # Po želji odstrani nespremembe/odstop:
         pivot = pivot.drop(['BREZ POŠKODBE', 'BREZ POŠKODBE-UZ', 'ODSTOP OD OGLEDA PN'], errors='ignore')
 
         if izbor == "Delež uporabe pasu po vrsti poškodbe (%)":
@@ -331,7 +329,6 @@ if data is not None:
             povzrocitelji = data[data['Povzrocitelj'] == 'POVZROČITELJ'].copy()
             povzrocitelji = povzrocitelji[povzrocitelji['Spol'].isin(['MOŠKI', 'ŽENSKI'])]
 
-            # Top 10 najpogostejših vzrokov
             top_vzroki = povzrocitelji['VzrokNesrece'].value_counts().head(10).index
 
             tabela = povzrocitelji[povzrocitelji['VzrokNesrece'].isin(top_vzroki)]
@@ -342,7 +339,7 @@ if data is not None:
                 aggfunc='count',
                 fill_value=0
             )
-            pivot = pivot.loc[top_vzroki]  # ohrani vrstni red vzrokov
+            pivot = pivot.loc[top_vzroki]
 
             fig2, ax2 = plt.subplots(figsize=(14, 6))
             pivot.plot(kind='bar', color=['skyblue', 'lightcoral'], ax=ax2)
@@ -361,7 +358,6 @@ if data is not None:
         top_n = st.slider("Število najpogostejših vzrokov", min_value=3, max_value=10, value=5, step=1)
 
         df = data.copy()
-        # Pretvori datum v mesec
         df['Mesec'] = pd.to_datetime(df['DatumPN'], errors='coerce').dt.month
         sezona_map = {
             12: 'Zima', 1: 'Zima', 2: 'Zima',
@@ -371,11 +367,9 @@ if data is not None:
         }
         df['LetniCas'] = df['Mesec'].map(sezona_map)
 
-        # Uporabi samo glavne vzroke
         top_vzroki = df['VzrokNesrece'].value_counts().head(top_n).index
         df_top = df[df['VzrokNesrece'].isin(top_vzroki)]
 
-        # Pivot: letni čas x vzrok
         tabela = df_top.groupby(['LetniCas', 'VzrokNesrece']).size().unstack().fillna(0)
         season_order = ['Pomlad', 'Poletje', 'Jesen', 'Zima']
         tabela = tabela.reindex(season_order)
