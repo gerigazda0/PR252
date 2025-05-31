@@ -31,13 +31,9 @@ Pri obdelavi in analizi podatkov smo uporabili orodja in knjižnice programskega
 
 ### 3.1. Najpogostejši vzroki za prometne nesreče
 
-Z analizo stolpca `VzrokNesrece` smo identificirali deset najpogostejših vzrokov prometnih nesreč v analiziranem obdobju.
+Ugotovili smo, da je top 5 vzrokov za prometne nesreče naslednje: premiki z vozilom, neupoštevanje pravil o prednosti, neprilagojena hitrost, neustrezna varnostna razdalja, nepravilna stran/smer vožnje. Ti vzroki predstavljajo 85% vseh nesreč. Prav tako smo prišli do spoznanja, da je leta 2020 število prometnih nesreč dokaj strmo upadlo, kar lahko logično povežemo z omejitvami COVID-19 pandemije. 
 
-![image](https://github.com/user-attachments/assets/65acbc71-301a-4131-b425-a6b902f33422)
-
-Naredili smo tudi trende glavnih vzrokov prometnih nesreč po letih.
-
-![image](https://github.com/user-attachments/assets/92ee68a9-b999-4b21-805c-ef047870f664)
+![image](https://github.com/user-attachments/assets/89efac20-7988-43b3-ba9c-a0975e9fcd3c)
 
 ### 3.2. Delež mladih voznikov med povzročitelji nesreč
 
