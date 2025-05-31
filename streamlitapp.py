@@ -6,6 +6,9 @@ import folium
 from folium.plugins import HeatMap
 from streamlit_folium import st_folium
 import matplotlib.pyplot as plt
+import numpy as np
+import plotly.express as px
+
 
 st.set_page_config(page_title="Prometne nesreče v Sloveniji", layout="wide")
 
@@ -28,7 +31,9 @@ page = st.sidebar.radio("Izberi sklop:", [
     "⚠️ Vzroki nesreč",
     "👶 Mladi povzročitelji",
     "🍷 Alkohol",
-    "🛡️Varnostni pas"
+    "🛡️Varnostni pas",
+    "👩‍🦰👨‍🦱 Spol povzročiteljev",
+    "🌱 Letni časi"
 ])
 
 if data is not None:
@@ -214,8 +219,6 @@ if data is not None:
             horizontal=True
         )
 
-        import numpy as np
-
         df_pas = data[data['UporabaVarnostnegaPasu'].isin(['DA', 'NE'])].copy()
         
         # Pripravimo pivot za oba grafa (da ni podvajanja kode)
@@ -274,6 +277,119 @@ if data is not None:
             ax.tick_params(axis='both', labelsize=12)
             plt.tight_layout()
             st.pyplot(fig)
+
+    
+    elif page == "👩‍🦰👨‍🦱 Spol povzročiteljev":
+        st.title("👩‍🦰👨‍🦱 Analiza po spolu")
+        izbor = st.radio(
+            "Izberi prikaz:",
+            (
+                "Vsi udeleženci in povzročitelji (stran ob strani)",
+                "Top 10 vzrokov nesreč po spolu povzročitelja"
+            ),
+            horizontal=True
+        )
+
+        if izbor == "Vsi udeleženci in povzročitelji (stran ob strani)":
+            fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+
+            # Prvi graf: vsi udeleženci, število
+            df1 = data.copy()
+            spoli1 = df1['Spol'].dropna()
+            spoli1 = spoli1[~spoli1.isin(['NEZNAN', 'NI PODATKA'])]
+            counts1 = spoli1.value_counts()
+            ax1 = axes[0]
+            counts1.plot(kind='bar', color=['lightblue', 'salmon'], ax=ax1)
+            ax1.set_title('Vsi udeleženci')
+            ax1.set_xlabel('Spol')
+            ax1.set_ylabel('Število')
+            ax1.set_xticklabels(counts1.index, rotation=0)
+            for p in ax1.patches:
+                ax1.annotate(f"{int(p.get_height())}", (p.get_x() + p.get_width() / 2., p.get_height()),
+                            ha='center', va='bottom', fontsize=11)
+
+            # Drugi graf: povzročitelji, %
+            df2 = data[data['Povzrocitelj'] == 'POVZROČITELJ'].copy()
+            spoli2 = df2['Spol'].dropna()
+            spoli2 = spoli2[~spoli2.isin(['NEZNAN', 'NI PODATKA'])]
+            counts2 = spoli2.value_counts()
+            perc2 = counts2 / counts2.sum() * 100
+            ax2 = axes[1]
+            perc2.plot(kind='bar', color=['lightblue', 'salmon'], ax=ax2)
+            ax2.set_title('Samo povzročitelji')
+            ax2.set_xlabel('Spol')
+            ax2.set_ylabel('Delež (%)')
+            ax2.set_xticklabels(perc2.index, rotation=0)
+            for p in ax2.patches:
+                ax2.annotate(f"{p.get_height():.1f}%", (p.get_x() + p.get_width() / 2., p.get_height()),
+                            ha='center', va='bottom', fontsize=11)
+
+            plt.tight_layout()
+            st.pyplot(fig)
+
+        elif izbor == "Top 10 vzrokov nesreč po spolu povzročitelja":
+            povzrocitelji = data[data['Povzrocitelj'] == 'POVZROČITELJ'].copy()
+            povzrocitelji = povzrocitelji[povzrocitelji['Spol'].isin(['MOŠKI', 'ŽENSKI'])]
+
+            # Top 10 najpogostejših vzrokov
+            top_vzroki = povzrocitelji['VzrokNesrece'].value_counts().head(10).index
+
+            tabela = povzrocitelji[povzrocitelji['VzrokNesrece'].isin(top_vzroki)]
+            pivot = tabela.pivot_table(
+                index='VzrokNesrece',
+                columns='Spol',
+                values='ZaporednaStevilkaPN',
+                aggfunc='count',
+                fill_value=0
+            )
+            pivot = pivot.loc[top_vzroki]  # ohrani vrstni red vzrokov
+
+            fig2, ax2 = plt.subplots(figsize=(14, 6))
+            pivot.plot(kind='bar', color=['skyblue', 'lightcoral'], ax=ax2)
+            ax2.set_title('Top 10 vzrokov prometnih nesreč in spol povzročitelja', fontsize=15, fontweight='bold')
+            ax2.set_xlabel('Vzrok nesreče', fontsize=13)
+            ax2.set_ylabel('Število povzročiteljev', fontsize=13)
+            ax2.tick_params(axis='both', labelsize=12)
+            ax2.legend(title='Spol', fontsize=12, title_fontsize=12)
+            plt.xticks(rotation=45, ha='right')
+            plt.tight_layout()
+            st.pyplot(fig2)
+
+
+    elif page == "🌱 Letni časi":
+        st.title("🌱 Pogostost nesreč po letnih časih in vzrokih")
+        top_n = st.slider("Število najpogostejših vzrokov", min_value=3, max_value=10, value=5, step=1)
+
+        df = data.copy()
+        # Pretvori datum v mesec
+        df['Mesec'] = pd.to_datetime(df['DatumPN'], errors='coerce').dt.month
+        sezona_map = {
+            12: 'Zima', 1: 'Zima', 2: 'Zima',
+            3: 'Pomlad', 4: 'Pomlad', 5: 'Pomlad',
+            6: 'Poletje', 7: 'Poletje', 8: 'Poletje',
+            9: 'Jesen', 10: 'Jesen', 11: 'Jesen'
+        }
+        df['LetniCas'] = df['Mesec'].map(sezona_map)
+
+        # Uporabi samo glavne vzroke
+        top_vzroki = df['VzrokNesrece'].value_counts().head(top_n).index
+        df_top = df[df['VzrokNesrece'].isin(top_vzroki)]
+
+        # Pivot: letni čas x vzrok
+        tabela = df_top.groupby(['LetniCas', 'VzrokNesrece']).size().unstack().fillna(0)
+        season_order = ['Pomlad', 'Poletje', 'Jesen', 'Zima']
+        tabela = tabela.reindex(season_order)
+
+        fig, ax = plt.subplots(figsize=(10, 6))
+        tabela.plot(ax=ax, marker='o')
+        ax.set_title(f'Pogostost {top_n} najpogostejših vzrokov nesreč po letnih časih', fontsize=15, fontweight='bold')
+        ax.set_xlabel('Letni čas', fontsize=13)
+        ax.set_ylabel('Število nesreč', fontsize=13)
+        ax.grid(True, linestyle='--', alpha=0.5)
+        ax.legend(title='Vzrok nesreče', fontsize=11, title_fontsize=12)
+        plt.tight_layout()
+        st.pyplot(fig)
+
 
 
 else:
