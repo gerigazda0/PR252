@@ -45,44 +45,93 @@ if data is not None:
         # Interaktivni filter po letih
         leto_min = int(data['Leto'].min())
         leto_max = int(data['Leto'].max())
-        izbrano_leto = st.slider("Izberi obdobje nesreč", min_value=leto_min, max_value=leto_max, value=(leto_min, leto_max))
+        izbrano_leto = st.slider(
+            "Izberi obdobje nesreč",
+            min_value=leto_min,
+            max_value=leto_max,
+            value=(leto_min, leto_max)
+        )
 
         sample = data[(data['Leto'] >= izbrano_leto[0]) & (data['Leto'] <= izbrano_leto[1])]
         sample = sample.dropna(subset=["GeoKoordinataX", "GeoKoordinataY"]).sample(n=3000, random_state=42)
         sample["GeoKoordinataX"] = sample["GeoKoordinataX"].astype(str).str.replace(",", ".").astype(float)
         sample["GeoKoordinataY"] = sample["GeoKoordinataY"].astype(str).str.replace(",", ".").astype(float)
+
         geometry = [Point(xy) for xy in zip(sample["GeoKoordinataY"], sample["GeoKoordinataX"])]
         gdf = gpd.GeoDataFrame(sample, geometry=geometry, crs="EPSG:3794").to_crs(epsg=4326)
-        heat_data = [[point.y, point.x] for point in gdf.geometry]
 
-        m = folium.Map(location=[46.1512, 14.9955], zoom_start=8, tiles="CartoDB positron")
-        HeatMap(heat_data, radius=10, blur=15, min_opacity=0.3).add_to(m)
-        st_folium(m, width=1000)
+        # Filtriraj na meje Slovenije
+        gdf = gdf[
+            (gdf.geometry.y >= 45.4) & (gdf.geometry.y <= 47.1) &
+            (gdf.geometry.x >= 13.3) & (gdf.geometry.x <= 16.6)
+        ]
+
+        if len(gdf) > 0:
+            heat_data = [[point.y, point.x] for point in gdf.geometry]
+            m = folium.Map(location=[46.1512, 14.9955], zoom_start=8, tiles="CartoDB positron")
+            HeatMap(heat_data, radius=10, blur=15, min_opacity=0.3).add_to(m)
+            st_folium(m, width=1000)
+        else:
+            st.warning("Po filtriranju ni ostalo nobenih podatkov v Sloveniji.")
 
     elif page == "🚧 Nevarni odseki":
-        st.title("🚧 Top 10 najbolj nevarnih cestnih odsekov")
+        st.title("🚧 Top 10 najbolj nevarnih cestnih odsekov glede na prometno obremenitev (2023)")
 
         # Interaktivni filter po upravni enoti
         ue_options = sorted(data['UpravnaEnotaStoritve'].dropna().unique())
         izbrana_ue = st.selectbox("Izberi upravno enoto", options=["Vse"] + ue_options)
 
-        filtered_data = data if izbrana_ue == "Vse" else data[data['UpravnaEnotaStoritve'] == izbrana_ue]
+        # Naloži podatke o prometnih obremenitvah (samo 1x, če je možno)
+        pldp = pd.read_excel('podatki/pldp2023noo.xlsx')
 
-        top_odseki = (
-            filtered_data.groupby(["TekstCesteNaselja", "TekstOdsekaUlice"])
-            .size()
-            .sort_values(ascending=False)
-            .reset_index(name="SteviloNesrec")
-            .head(10)
+        # Pripravi podatke o nesrečah (samo za leto 2023)
+        nesrece_2023 = data[data["Leto"] == 2023].copy()
+        if izbrana_ue != "Vse":
+            nesrece_2023 = nesrece_2023[nesrece_2023['UpravnaEnotaStoritve'] == izbrana_ue]
+
+        # Poveži tekstovno ime
+        nesrece_2023['OpisOdseka'] = nesrece_2023['TekstCesteNaselja'].str.strip()
+        pldp['Prometni odsek'] = pldp['Prometni odsek'].str.strip()
+        pldp['AADT'] = pd.to_numeric(pldp['Vsa vozila (PLDP)'], errors='coerce')
+
+        merged = nesrece_2023.merge(pldp, left_on='OpisOdseka', right_on='Prometni odsek', how='left')
+
+        nesrece_na_odsek = (
+            merged.groupby('OpisOdseka')
+            .agg({'ZaporednaStevilkaPN': 'count', 'AADT': 'first'})
+            .rename(columns={'ZaporednaStevilkaPN': 'SteviloNesrec'})
+            .reset_index()
         )
-        top_odseki["OpisOdseka"] = top_odseki["TekstCesteNaselja"] + " – " + top_odseki["TekstOdsekaUlice"]
 
-        fig1, ax1 = plt.subplots(figsize=(10, 5))
-        ax1.barh(top_odseki["OpisOdseka"], top_odseki["SteviloNesrec"], color='orange')
-        ax1.set_title("Top 10 najbolj nevarnih cestnih odsekov")
-        ax1.set_xlabel("Število prometnih nesreč")
-        ax1.invert_yaxis()
-        st.pyplot(fig1)
+        # Izračunaj standardizirano nevarnost
+        nesrece_na_odsek['NesreceNaMilijonVozil'] = (
+            nesrece_na_odsek['SteviloNesrec'] / (nesrece_na_odsek['AADT'] * 365) * 1_000_000
+        )
+        # Filtriraj na dovolj prometne/nevarne odseke
+        nesrece_na_odsek = nesrece_na_odsek[nesrece_na_odsek['SteviloNesrec'] >= 20]
+        # Top 10 po nevarnosti
+        top10 = nesrece_na_odsek.sort_values('NesreceNaMilijonVozil', ascending=False).head(10)
+
+        # Barvni, lep graf z legendami, črto, gridom in večjimi oznakami
+        fig, ax = plt.subplots(figsize=(10, 6))
+        bars = ax.barh(top10['OpisOdseka'], top10['NesreceNaMilijonVozil'], color="#e15759")
+        ax.set_title("Top 10 najbolj nevarnih cestnih odsekov glede na prometno obremenitev (2023)", fontsize=15, fontweight="bold")
+        ax.set_xlabel("Nesreče na milijon vozil v letu 2023", fontsize=13)
+        ax.set_ylabel("Cestni odsek", fontsize=13)
+        ax.invert_yaxis()
+        ax.grid(axis='x', linestyle='--', alpha=0.7)
+        # Dodaj vrednosti
+        for bar in bars:
+            width = bar.get_width()
+            ax.text(width + 0.5, bar.get_y() + bar.get_height() / 2, f"{width:.1f}", va='center', fontsize=12)
+        plt.tight_layout()
+        st.pyplot(fig)
+
+        # Opcijsko: Prikaži še tabelo pod grafom (podatke top10)
+        st.markdown("#### Podatki za top 10 najbolj nevarnih odsekov:")
+        st.dataframe(top10[['OpisOdseka', 'SteviloNesrec', 'AADT', 'NesreceNaMilijonVozil']].rename(
+            columns={'OpisOdseka': 'Odsek', 'SteviloNesrec': 'Št. nesreč', 'AADT': 'Povpr. dnevni promet', 'NesreceNaMilijonVozil': 'Nesreč na milijon vozil'}), use_container_width=True)
+
 
     elif page == "⚠️ Vzroki nesreč":
         st.title("⚠️ Najpogostejši vzroki prometnih nesreč")
@@ -213,14 +262,15 @@ if data is not None:
         izbor = st.radio(
             "Izberi prikaz:",
             (
-                "Delež uporabe pasu po vrsti poškodbe (%)",
-                "Število poškodb glede na uporabo pasu"
+                "Primerjava smrtnosti glede na uporabo pasu",
+                "Izid prometne nesreče glede na uporabo pasu"
             ),
             horizontal=True
         )
 
         df_pas = data[data['UporabaVarnostnegaPasu'].isin(['DA', 'NE'])].copy()
-        
+
+        # PIVOT tabela za oba grafa
         pivot = pd.pivot_table(
             df_pas,
             index='PoskodbaUdelezenca',
@@ -229,52 +279,62 @@ if data is not None:
             fill_value=0
         )
 
-        pivot = pivot.drop(['BREZ POŠKODBE', 'BREZ POŠKODBE-UZ', 'ODSTOP OD OGLEDA PN'], errors='ignore')
+        if izbor == "Primerjava smrtnosti glede na uporabo pasu":
+            # SMRTNOST: SMRT / skupaj DA oz. NE
+            umrli_z_pasu = pivot.loc['SMRT', 'DA'] if 'SMRT' in pivot.index else 0
+            umrli_brez_pasu = pivot.loc['SMRT', 'NE'] if 'SMRT' in pivot.index else 0
 
-        if izbor == "Delež uporabe pasu po vrsti poškodbe (%)":
-            percent_pivot = pivot.div(pivot.sum(axis=1), axis=0) * 100
-            percent_pivot = percent_pivot.loc[percent_pivot['NE'].sort_values(ascending=False).index]
-            fig, ax = plt.subplots(figsize=(10, 6))
-            percent_pivot[['DA', 'NE']].plot(
-                kind='bar',
-                stacked=True,
-                color={'DA': '#4e79a7', 'NE': '#e15759'},
-                ax=ax
-            )
-            ax.set_title('Delež uporabe varnostnega pasu glede na vrsto poškodbe (%)', fontsize=15, fontweight='bold')
-            ax.set_xlabel('Vrsta poškodbe', fontsize=13)
-            ax.set_ylabel('Delež udeležencev (%)', fontsize=13)
-            # Premakni legendo NAD graf
-            ax.legend(
-                title='Uporaba varnostnega pasu',
-                loc='lower center',
-                bbox_to_anchor=(0.5, 1.2),
-                ncol=2,
-                fontsize=12,
-                title_fontsize=12
-            )
-            ax.tick_params(axis='both', labelsize=12)
+            skupaj_z_pasu = pivot['DA'].sum()
+            skupaj_brez_pasu = pivot['NE'].sum()
+
+            smrtnost_z_pasu = umrli_z_pasu / skupaj_z_pasu * 100 if skupaj_z_pasu > 0 else 0
+            smrtnost_brez_pasu = umrli_brez_pasu / skupaj_brez_pasu * 100 if skupaj_brez_pasu > 0 else 0
+
+            labels = ['Z varnostnim pasom', 'Brez varnostnega pasu']
+            values = [smrtnost_z_pasu, smrtnost_brez_pasu]
+
+            fig, ax = plt.subplots(figsize=(7, 5))
+            bars = ax.bar(labels, values, color=['#4e79a7', '#e15759'])
+            ax.set_ylabel('Smrtnost (%)')
+            ax.set_title('Primerjava smrtnosti glede na uporabo varnostnega pasu', fontsize=14)
+            ax.set_ylim(0, max(values) * 1.4)
+            for bar in bars:
+                ax.text(bar.get_x() + bar.get_width()/2, bar.get_height(), f'{bar.get_height():.2f}%', 
+                        ha='center', va='bottom', fontsize=12, fontweight='bold')
             plt.tight_layout()
             st.pyplot(fig)
 
+            st.markdown(f"**Smrtnost med udeleženci Z varnostnim pasom:** {smrtnost_z_pasu:.3f}%  \n"
+                        f"**Smrtnost med udeleženci BREZ varnostnega pasu:** {smrtnost_brez_pasu:.3f}%")
 
-        elif izbor == "Število poškodb glede na uporabo pasu":
-            # Sortiraj po skupnem številu (najprej manj pogoste poškodbe)
-            pivot_sorted = pivot.loc[pivot.sum(axis=1).sort_values().index]
-            y = np.arange(len(pivot_sorted.index))
-            bar_width = 0.4
-            fig, ax = plt.subplots(figsize=(10, 6))
-            ax.barh(y - bar_width/2, pivot_sorted['DA'], height=bar_width, label='Z varnostnim pasom', color='#4e79a7')
-            ax.barh(y + bar_width/2, pivot_sorted['NE'], height=bar_width, label='Brez varnostnega pasu', color='#e15759')
-            ax.set_yticks(y)
-            ax.set_yticklabels(pivot_sorted.index)
-            ax.set_xlabel('Število udeležencev', fontsize=13)
-            ax.set_ylabel('Vrsta poškodbe', fontsize=13)
-            ax.set_title('Poškodbe udeležencev glede na uporabo varnostnega pasu', fontsize=15, fontweight='bold')
-            ax.legend()
-            ax.tick_params(axis='both', labelsize=12)
+        elif izbor == "Izid prometne nesreče glede na uporabo pasu":
+            kategorije = ['SMRT', 'HUDA TELESNA POŠKODBA', 'LAŽJA TELESNA POŠKODBA', 'BREZ POŠKODBE']
+            pivot2 = pivot.reindex(kategorije)
+
+            skupaj_z_pasu = pivot2['DA'].sum()
+            skupaj_brez_pasu = pivot2['NE'].sum()
+
+            delezi = pd.DataFrame({
+                'Z varnostnim pasom': (pivot2['DA'] / skupaj_z_pasu * 100).round(2),
+                'Brez varnostnega pasu': (pivot2['NE'] / skupaj_brez_pasu * 100).round(2)
+            }, index=kategorije)
+
+            fig2, ax2 = plt.subplots(figsize=(9, 6))
+            delezi.plot(kind='bar', ax=ax2, color=['#4e79a7', '#e15759'])
+            ax2.set_ylabel('Delež (%)')
+            ax2.set_xlabel('Vrsta poškodbe')
+            ax2.set_title('Izid prometne nesreče glede na uporabo varnostnega pasu')
+            ax2.legend(title='Uporaba varnostnega pasu')
+            ax2.set_ylim(0, 100)
+
+            for p in ax2.patches:
+                if not pd.isna(p.get_height()):
+                    ax2.annotate(f'{p.get_height():.2f}%', (p.get_x() + p.get_width()/2., p.get_height()),
+                                ha='center', va='bottom', fontsize=10, fontweight='bold')
+
             plt.tight_layout()
-            st.pyplot(fig)
+            st.pyplot(fig2)
+
 
     
     elif page == "👩‍🦰👨‍🦱 Spol povzročiteljev":
