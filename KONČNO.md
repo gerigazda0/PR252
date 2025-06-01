@@ -29,6 +29,8 @@ Pri obdelavi in analizi podatkov smo uporabili orodja in knjižnice programskega
 
 ## 3. Glavne ugotovitve
 
+V nadaljevanju so povzete glavne ugotovitve naše raziskave. Možen je tudi interaktivni pregled v aplikaciji Streamlit: https://appapppy-dvdpj2bwkjmtnypjq8tpq9.streamlit.app/
+
 ### 3.1 Najpogostejši vzroki za prometne nesreče
 
 Ugotovili smo, da je top 5 vzrokov za prometne nesreče naslednje: premiki z vozilom, neupoštevanje pravil o prednosti, neprilagojena hitrost, neustrezna varnostna razdalja, nepravilna stran/smer vožnje. Ti vzroki predstavljajo 85% vseh nesreč. Prav tako smo prišli do spoznanja, da je leta 2020 število prometnih nesreč dokaj strmo upadlo, kar lahko logično povežemo z omejitvami COVID-19 pandemije. 
