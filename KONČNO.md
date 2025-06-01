@@ -22,7 +22,7 @@ Prometne nesreče predstavljajo resno tveganje za javno zdravje in varnost v Slo
 ## 2. Podatki in metodologija
 
 ### 2.1 Podatki
-Podatke za našo analizo smo pridobili s spletne strani OPSI (https://podatki.gov.si/dataset/mnzpprometne-nesrece-od-leta-2009-dalje). Zajemajo informacije o vseh prometnih nesrečah v Sloveniji od leta 2009 do 2023 in so dostopni v formatu CSV datotek, ločenih po letih. Vsaka datoteka vsebuje podrobne informacije o posamezni nesreči, vključno z datumom, uro, lokacijo, vzrokom, udeleženci in posledicami.Stolpci, ki so bili ključni za našo analizo, vključujejo: VzrokNesrece, Starost, Spol, UpravnaEnotaStoritve, VrednostAlkotesta, DatumPN, PoskodbaUdelezenca, UporabaVarnostnegaPasu, GeoKoordinataX, GeoKoordinataY, Povzrocitelj, VrstaUdelezenca, ZaporednaStevilkaOsebeVPN ter KlasifikacijaNesrece. Ti podatki so nam omogočili podrobno analizo vzrokov, okoliščin in posledic prometnih nesreč, kot tudi identifikacijo vzorcev tveganega vedenja med udeleženci. Za potrebe analize smo posamezne letne datoteke prenesli in jih s pomočjo knjižnice `pandas` v programskem jeziku Python združili v enoten DataFrame. Ta korak je omogočil lažjo in učinkovitejšo analizo celotnega časovnega obdobja.
+Podatke za našo analizo smo pridobili s spletne strani OPSI (https://podatki.gov.si/dataset/mnzpprometne-nesrece-od-leta-2009-dalje). Zajemajo informacije o vseh prometnih nesrečah v Sloveniji od leta 2009 do 2023 in so dostopni v formatu CSV datotek, ločenih po letih. Vsaka datoteka vsebuje podrobne informacije o posamezni nesreči, vključno z datumom, uro, lokacijo, vzrokom, udeleženci in posledicami.Stolpci, ki so bili ključni za našo analizo, vključujejo: VzrokNesrece, Starost, Spol, UpravnaEnotaStoritve, VrednostAlkotesta, DatumPN, PoskodbaUdelezenca, UporabaVarnostnegaPasu, GeoKoordinataX, GeoKoordinataY, Povzrocitelj, VrstaUdelezenca, ZaporednaStevilkaOsebeVPN ter KlasifikacijaNesrece. Ti podatki so nam omogočili podrobno analizo vzrokov, okoliščin in posledic prometnih nesreč, kot tudi identifikacijo vzorcev tveganega vedenja med udeleženci. Za potrebe analize smo posamezne letne datoteke prenesli in jih s pomočjo knjižnice `pandas` v programskem jeziku Python združili v enoten DataFrame. Ta korak je omogočil lažjo in učinkovitejšo analizo celotnega časovnega obdobja. Prav tako smo pri raziskovanju najbolj nevarnih odsekov/cest uporabili podatke iz OPSI (https://podatki.gov.si/dataset/pldp-karte-prometnih-obremenitev) za leto 2023 o prometnih obremenitvah.
 
 ### 2.2 Metodologija
 Pri obdelavi in analizi podatkov smo uporabili orodja in knjižnice programskega jezika Python. Za manipulacijo, čiščenje in združevanje podatkov smo uporabili knjižnico pandas, za izvajanje matematičnih in statističnih operacij pa numpy. Prostorske oziroma geografske analize in vizualizacije smo izvajali s pomočjo knjižnic geopandas in folium, ki omogočata prikaz in obdelavo prostorskih podatkov ter interaktivno vizualizacijo lokacij prometnih nesreč na zemljevidih. Za pripravo različnih vrst grafov smo uporabili knjižnico matplotlib.
@@ -64,6 +64,10 @@ Rezultati jasno kažejo, da uporaba varnostnega pasu bistveno zmanjša tveganje 
 ![image](https://github.com/user-attachments/assets/7c00b75b-34f7-4480-ae66-b0d00ccb273e)
 
 ### 3.6 Vpliv spola na prometne nesreče
+
+Ugotovili smo, da so moški bistveno pogosteje udeleženi in še posebej pogosteje povzročitelji prometnih nesreč v primerjavi z ženskami. Vendar pa te številke odražajo tudi večji delež moških med celotno populacijo voznikov, zato bi za natančno primerjavo tveganja med spoloma bilo treba upoštevati še razporeditev voznikov po spolu v populaciji. Natančnega podatka o razporeditvi voznikov po spolu nismo našli.
+
+![image](https://github.com/user-attachments/assets/a5005b57-b72f-4ad2-9229-6f3a9d11cca4)
 
 ### 3.7 Vpliv letnega časa na prometne nesreče
 
