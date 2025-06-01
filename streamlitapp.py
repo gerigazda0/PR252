@@ -42,7 +42,7 @@ if data is not None:
     if page == "📍 Toplotna karta":
         st.title("📍 Toplotna karta prometnih nesreč")
 
-        # Interaktivni filter po letih
+        # filter po letih
         leto_min = int(data['Leto'].min())
         leto_max = int(data['Leto'].max())
         izbrano_leto = st.slider(
@@ -60,7 +60,7 @@ if data is not None:
         geometry = [Point(xy) for xy in zip(sample["GeoKoordinataY"], sample["GeoKoordinataX"])]
         gdf = gpd.GeoDataFrame(sample, geometry=geometry, crs="EPSG:3794").to_crs(epsg=4326)
 
-        # Filtriraj na meje Slovenije
+        # meje Slovenije
         gdf = gdf[
             (gdf.geometry.y >= 45.4) & (gdf.geometry.y <= 47.1) &
             (gdf.geometry.x >= 13.3) & (gdf.geometry.x <= 16.6)
@@ -77,19 +77,15 @@ if data is not None:
     elif page == "🚧 Nevarni odseki":
         st.title("🚧 Top 10 najbolj nevarnih cestnih odsekov glede na prometno obremenitev (2023)")
 
-        # Interaktivni filter po upravni enoti
         ue_options = sorted(data['UpravnaEnotaStoritve'].dropna().unique())
         izbrana_ue = st.selectbox("Izberi upravno enoto", options=["Vse"] + ue_options)
 
-        # Naloži podatke o prometnih obremenitvah (samo 1x, če je možno)
         pldp = pd.read_excel('podatki/pldp2023noo.xlsx')
 
-        # Pripravi podatke o nesrečah (samo za leto 2023)
         nesrece_2023 = data[data["Leto"] == 2023].copy()
         if izbrana_ue != "Vse":
             nesrece_2023 = nesrece_2023[nesrece_2023['UpravnaEnotaStoritve'] == izbrana_ue]
 
-        # Poveži tekstovno ime
         nesrece_2023['OpisOdseka'] = nesrece_2023['TekstCesteNaselja'].str.strip()
         pldp['Prometni odsek'] = pldp['Prometni odsek'].str.strip()
         pldp['AADT'] = pd.to_numeric(pldp['Vsa vozila (PLDP)'], errors='coerce')
@@ -103,16 +99,12 @@ if data is not None:
             .reset_index()
         )
 
-        # Izračunaj standardizirano nevarnost
         nesrece_na_odsek['NesreceNaMilijonVozil'] = (
             nesrece_na_odsek['SteviloNesrec'] / (nesrece_na_odsek['AADT'] * 365) * 1_000_000
         )
-        # Filtriraj na dovolj prometne/nevarne odseke
         nesrece_na_odsek = nesrece_na_odsek[nesrece_na_odsek['SteviloNesrec'] >= 20]
-        # Top 10 po nevarnosti
         top10 = nesrece_na_odsek.sort_values('NesreceNaMilijonVozil', ascending=False).head(10)
 
-        # Barvni, lep graf z legendami, črto, gridom in večjimi oznakami
         fig, ax = plt.subplots(figsize=(10, 6))
         bars = ax.barh(top10['OpisOdseka'], top10['NesreceNaMilijonVozil'], color="#e15759")
         ax.set_title("Top 10 najbolj nevarnih cestnih odsekov glede na prometno obremenitev (2023)", fontsize=15, fontweight="bold")
@@ -127,7 +119,6 @@ if data is not None:
         plt.tight_layout()
         st.pyplot(fig)
 
-        # Opcijsko: Prikaži še tabelo pod grafom (podatke top10)
         st.markdown("#### Podatki za top 10 najbolj nevarnih odsekov:")
         st.dataframe(top10[['OpisOdseka', 'SteviloNesrec', 'AADT', 'NesreceNaMilijonVozil']].rename(
             columns={'OpisOdseka': 'Odsek', 'SteviloNesrec': 'Št. nesreč', 'AADT': 'Povpr. dnevni promet', 'NesreceNaMilijonVozil': 'Nesreč na milijon vozil'}), use_container_width=True)
@@ -202,7 +193,7 @@ if data is not None:
             except:
                 return 0.0
 
-        df = data.copy()  # če rabiš večkrat
+        df = data.copy()
         df['VrednostAlkotesta_float'] = df['VrednostAlkotesta'].apply(parse_alko)
 
         if izbor == "Delež povzročiteljev po vrednosti alkotesta":
@@ -270,7 +261,7 @@ if data is not None:
 
         df_pas = data[data['UporabaVarnostnegaPasu'].isin(['DA', 'NE'])].copy()
 
-        # PIVOT tabela za oba grafa
+        
         pivot = pd.pivot_table(
             df_pas,
             index='PoskodbaUdelezenca',
@@ -280,7 +271,7 @@ if data is not None:
         )
 
         if izbor == "Primerjava smrtnosti glede na uporabo pasu":
-            # SMRTNOST: SMRT / skupaj DA oz. NE
+            # SMRTNOST
             umrli_z_pasu = pivot.loc['SMRT', 'DA'] if 'SMRT' in pivot.index else 0
             umrli_brez_pasu = pivot.loc['SMRT', 'NE'] if 'SMRT' in pivot.index else 0
 
@@ -351,7 +342,7 @@ if data is not None:
         if izbor == "Vsi udeleženci in povzročitelji (stran ob strani)":
             fig, axes = plt.subplots(1, 2, figsize=(12, 5))
 
-            # Prvi graf: vsi udeleženci, število
+            #vsi udeleženci, število
             df1 = data.copy()
             spoli1 = df1['Spol'].dropna()
             spoli1 = spoli1[~spoli1.isin(['NEZNAN', 'NI PODATKA'])]
@@ -366,7 +357,7 @@ if data is not None:
                 ax1.annotate(f"{int(p.get_height())}", (p.get_x() + p.get_width() / 2., p.get_height()),
                             ha='center', va='bottom', fontsize=11)
 
-            # Drugi graf: povzročitelji, %
+            #povzročitelji, %
             df2 = data[data['Povzrocitelj'] == 'POVZROČITELJ'].copy()
             spoli2 = df2['Spol'].dropna()
             spoli2 = spoli2[~spoli2.isin(['NEZNAN', 'NI PODATKA'])]
