@@ -59,6 +59,14 @@ Analizirali smo tudi vpliv alkohola na povzročanje prometnih nesreč. Ugotovili
 
 ### 3.5 Uporaba varnostnega pasu
 
+Rezultati jasno kažejo, da uporaba varnostnega pasu bistveno zmanjša tveganje za najhujše posledice prometnih nesreč. Med udeleženci, ki so uporabljali pas, je bila smrtnost le 0,21 %, medtem ko je bila pri tistih brez pasu kar 1,58 %. Prav tako je bil delež hudih telesnih poškodb pri neuporabi pasu več kot štirikrat večji kot pri uporabi. Poleg tega je bilo pri uporabnikih pasu precej več primerov, ko so nesrečo prestali brez poškodb. Ti podatki potrjujejo, da je uporaba varnostnega pasu eden najučinkovitejših ukrepov za zmanjšanje posledic prometnih nesreč.
+
+![image](https://github.com/user-attachments/assets/7c00b75b-34f7-4480-ae66-b0d00ccb273e)
+
 ### 3.6 Vpliv spola na prometne nesreče
 
 ### 3.7 Vpliv letnega časa na prometne nesreče
+
+Analiza pogostosti najpogostejših vzrokov prometnih nesreč po letnih časih kaže, da se največ nesreč zgodi v poletnih in jesenskih mesecih. Skoraj vsi glavni vzroki, kot so neupoštevanje pravil o prednosti, neprilagojena hitrost, neustrezna varnostna razdalja in premiki z vozilom, dosegajo vrhove v tem obdobju, medtem ko je število nesreč najnižje pozimi. Ti rezultati kažejo, da je tveganje za prometno nesrečo zaradi najpogostejših vzrokov večje v obdobjih, ko je na cestah več prometa in so pogoji za vožnjo boljši.
+
+![image](https://github.com/user-attachments/assets/6d633814-4b6f-400f-aba7-4445a80fb89f)
