@@ -29,25 +29,36 @@ Pri obdelavi in analizi podatkov smo uporabili orodja in knjižnice programskega
 
 ## 3. Glavne ugotovitve
 
-### 3.1. Najpogostejši vzroki za prometne nesreče
+### 3.1 Najpogostejši vzroki za prometne nesreče
 
 Ugotovili smo, da je top 5 vzrokov za prometne nesreče naslednje: premiki z vozilom, neupoštevanje pravil o prednosti, neprilagojena hitrost, neustrezna varnostna razdalja, nepravilna stran/smer vožnje. Ti vzroki predstavljajo 85% vseh nesreč. Prav tako smo prišli do spoznanja, da je leta 2020 število prometnih nesreč dokaj strmo upadlo, kar lahko logično povežemo z omejitvami COVID-19 pandemije. 
 
 ![image](https://github.com/user-attachments/assets/89efac20-7988-43b3-ba9c-a0975e9fcd3c)
 
-### 3.2. Delež mladih voznikov med povzročitelji nesreč
+### 3.2 Delež mladih voznikov med povzročitelji nesreč
 
-Da bi preučili vlogo mladih voznikov kot povzročiteljev nesreč, smo ustvarili novo kategorijo 'MladiVoznik' za udeležence starosti med 18 in 24 let. Nato smo analizirali delež teh voznikov med vsemi, ki so bili označeni kot povzročitelji nesreče. Prav tako smo primerjali povprečno vrednost alkotesta po starostnih skupinah.
+Da bi preučili vlogo mladih voznikov kot povzročiteljev nesreč, smo ustvarili novo kategorijo 'MladiVoznik' za udeležence starosti med 18 in 24 let. Nato smo analizirali delež teh voznikov med vsemi, ki so bili označeni kot povzročitelji nesreče. Ugotovili smo, da je mladih povzročiteljev nesreč 14.2%. Pri mladih voznikih je razlog za nesreče največkrat neprilagojena hitrost, kar se razlikuje od 'starejših' voznikov, kjer je najpogostejši vzrok premik z vozilom.
 
-![image](https://github.com/user-attachments/assets/b1165874-0334-450e-83ec-d8213dfeff37)
+![image](https://github.com/user-attachments/assets/d8dd0f8d-960c-4883-834d-abcc3d5ed413)
 
+### 3.3 Geografska porazdeljenost prometnih nesreč
 
-### 3.3. Geografska porazdeljenost prometnih nesreč
-
-Na podlagi prostorske analize prometnih nesreč z uporabo “heatmap” vizualizacije ugotavljamo, da so prometne nesreče v Sloveniji izrazito skoncentrirane na območjih večjih urbanih središč, predvsem v Ljubljani in njeni okolici, kjer je gostota nesreč najvišja. Povečana gostota je opazna tudi v okolici Maribora ter vzdolž glavnih cest in avtocest, ki povezujejo večja mesta. V primerjavi s tem so prometne nesreče precej redkejše na podeželju in obmejnih območjih, kjer je prometna obremenitev manjša.
+Na podlagi prostorske analize prometnih nesreč z uporabo “heatmap” vizualizacije ugotavljamo, da so prometne nesreče v Sloveniji izrazito skoncentrirane na območjih večjih urbanih središč, predvsem v Ljubljani in njeni okolici, kjer je gostota nesreč najvišja. Povečana gostota je opazna tudi v okolici Maribora ter vzdolž glavnih cest in avtocest, ki povezujejo večja mesta. V primerjavi s tem so prometne nesreče precej redkejše na podeželju in obmejnih območjih, kjer je prometna obremenitev manjša. 
 
 ![image](https://github.com/user-attachments/assets/b8350e94-7b1a-41eb-b809-1077c593ff92)
 
-### 3.4. Vpliv alkohola na nesreče
+Prav tako nas je zanimalo, kateri cestni odsek je najnevarnejši, glede na prometnost ceste v primerjavi z nesrečami, ki se tam zgodijo. S tem pristopom dobimo bolj realno sliko o nevarnosti posameznih odsekov, saj primerjamo število nesreč na milijon vozil in tako izpostavimo tudi manj prometne, a statistično bolj nevarne ceste. Rezultati so pokazali, da so najbolj nevarne ceste v Sloveniji Murska Sobota, Rogatec in Nova Gorica.
 
-### 3.5. 
+![image](https://github.com/user-attachments/assets/01675d0c-0b72-4f2f-a95e-1c91fa227a91)
+
+### 3.4 Vpliv alkohola na nesreče
+
+Analizirali smo tudi vpliv alkohola na povzročanje prometnih nesreč. Ugotovili smo, da je bilo pod vplivom alkohola 10,94 % vseh povzročiteljev nesreč, pri čemer jih je 6,66 % prekoračilo zakonsko dovoljeno mejo alkohola v krvi. Posebej nas je zanimal delež huje poškodovanih udeležencev, ki so jih povzročili pijani vozniki; rezultati kažejo, da so ti vozniki odgovorni za skoraj tri četrtine tovrstnih nesreč.
+
+![image](https://github.com/user-attachments/assets/7eb44b24-6f73-45d4-a930-2022c6dc10e7)
+
+### 3.5 Uporaba varnostnega pasu
+
+### 3.6 Vpliv spola na prometne nesreče
+
+### 3.7 Vpliv letnega časa na prometne nesreče
